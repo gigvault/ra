@@ -101,7 +101,7 @@ func (s *RAService) ApproveEnrollment(ctx context.Context, id, approvedBy string
 	// 1. Picks up approved enrollments
 	// 2. Calls CA service via gRPC
 	// 3. Updates enrollment with certificate
-	// 
+	//
 	// For now, mark as approved and let a worker handle the actual signing
 	// See: ra/internal/grpc/ca_client.go for CA integration
 	s.logger.Info("Enrollment queued for CA signing")

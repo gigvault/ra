@@ -92,18 +92,18 @@ func (c *CAClient) SignCSR(ctx context.Context, csrPEM string, validityDays int)
 
 	/*
 		Example implementation:
-		
+
 		client := capb.NewCAServiceClient(c.conn)
 		req := &capb.SignCSRRequest{
 			CsrPem:       csrPEM,
 			ValidityDays: int32(validityDays),
 		}
-		
+
 		resp, err := client.SignCSR(ctx, req)
 		if err != nil {
 			return "", fmt.Errorf("failed to sign CSR: %w", err)
 		}
-		
+
 		return resp.CertificatePem, nil
 	*/
 
@@ -118,12 +118,12 @@ func (c *CAClient) GetCertificate(ctx context.Context, serial string) (string, e
 		req := &capb.GetCertificateRequest{
 			Serial: serial,
 		}
-		
+
 		resp, err := client.GetCertificate(ctx, req)
 		if err != nil {
 			return "", fmt.Errorf("failed to get certificate: %w", err)
 		}
-		
+
 		return resp.CertificatePem, nil
 	*/
 
@@ -138,12 +138,12 @@ func (c *CAClient) RevokeCertificate(ctx context.Context, serial string, reason 
 			Serial: serial,
 			Reason: reason,
 		}
-		
+
 		_, err := client.RevokeCertificate(ctx, req)
 		if err != nil {
 			return fmt.Errorf("failed to revoke certificate: %w", err)
 		}
-		
+
 		return nil
 	*/
 
@@ -157,4 +157,3 @@ func (c *CAClient) Close() error {
 	}
 	return nil
 }
-
