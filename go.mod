@@ -3,7 +3,7 @@ module github.com/gigvault/ra
 go 1.23
 
 require (
-	github.com/gigvault/shared v0.0.0
+	github.com/gigvault/shared v1.0.0
 	github.com/gorilla/mux v1.8.1
 	github.com/jackc/pgx/v5 v5.5.0
 	go.uber.org/zap v1.26.0
@@ -24,5 +24,3 @@ require (
 	google.golang.org/protobuf v1.35.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/gigvault/shared => ../shared
