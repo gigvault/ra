@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	capb "github.com/gigvault/shared/api/proto/ca"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -84,70 +85,58 @@ func NewCAClient(cfg CAClientConfig, logger *zap.Logger) (*CAClient, error) {
 
 // SignCSR sends a CSR to CA for signing
 func (c *CAClient) SignCSR(ctx context.Context, csrPEM string, validityDays int) (string, error) {
-	// TODO: Define protobuf messages for CA service
-	// For now, this is a stub that shows the interface
 	c.logger.Info("Signing CSR via CA service",
 		zap.Int("validity_days", validityDays),
 	)
 
-	/*
-		Example implementation:
+	client := capb.NewCAServiceClient(c.conn)
+	req := &capb.SignCSRRequest{
+		CsrPem:       csrPEM,
+		ValidityDays: int32(validityDays),
+		Profile:      "server", // Default profile
+	}
 
-		client := capb.NewCAServiceClient(c.conn)
-		req := &capb.SignCSRRequest{
-			CsrPem:       csrPEM,
-			ValidityDays: int32(validityDays),
-		}
+	resp, err := client.SignCSR(ctx, req)
+	if err != nil {
+		return "", fmt.Errorf("failed to sign CSR: %w", err)
+	}
 
-		resp, err := client.SignCSR(ctx, req)
-		if err != nil {
-			return "", fmt.Errorf("failed to sign CSR: %w", err)
-		}
+	c.logger.Info("CSR signed successfully", zap.String("serial", resp.SerialNumber))
 
-		return resp.CertificatePem, nil
-	*/
-
-	// Stub implementation
-	return "", fmt.Errorf("CA gRPC client not fully implemented - protobuf definitions needed")
+	return resp.CertificatePem, nil
 }
 
 // GetCertificate retrieves a certificate by serial from CA
 func (c *CAClient) GetCertificate(ctx context.Context, serial string) (string, error) {
-	/*
-		client := capb.NewCAServiceClient(c.conn)
-		req := &capb.GetCertificateRequest{
-			Serial: serial,
-		}
+	client := capb.NewCAServiceClient(c.conn)
+	req := &capb.GetCertificateRequest{
+		SerialNumber: serial,
+	}
 
-		resp, err := client.GetCertificate(ctx, req)
-		if err != nil {
-			return "", fmt.Errorf("failed to get certificate: %w", err)
-		}
+	resp, err := client.GetCertificate(ctx, req)
+	if err != nil {
+		return "", fmt.Errorf("failed to get certificate: %w", err)
+	}
 
-		return resp.CertificatePem, nil
-	*/
-
-	return "", fmt.Errorf("CA gRPC client not fully implemented - protobuf definitions needed")
+	return resp.CertificatePem, nil
 }
 
 // RevokeCertificate requests certificate revocation from CA
 func (c *CAClient) RevokeCertificate(ctx context.Context, serial string, reason string) error {
-	/*
-		client := capb.NewCAServiceClient(c.conn)
-		req := &capb.RevokeCertificateRequest{
-			Serial: serial,
-			Reason: reason,
-		}
+	client := capb.NewCAServiceClient(c.conn)
+	req := &capb.RevokeCertificateRequest{
+		SerialNumber: serial,
+		Reason:       reason,
+	}
 
-		_, err := client.RevokeCertificate(ctx, req)
-		if err != nil {
-			return fmt.Errorf("failed to revoke certificate: %w", err)
-		}
+	_, err := client.RevokeCertificate(ctx, req)
+	if err != nil {
+		return fmt.Errorf("failed to revoke certificate: %w", err)
+	}
 
-		return nil
-	*/
+	c.logger.Info("Certificate revoked successfully", zap.String("serial", serial))
 
-	return fmt.Errorf("CA gRPC client not fully implemented - protobuf definitions needed")
+	return nil
 }
 
 // Close closes the gRPC connection
