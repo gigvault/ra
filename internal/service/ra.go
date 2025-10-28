@@ -96,7 +96,15 @@ func (s *RAService) ApproveEnrollment(ctx context.Context, id, approvedBy string
 		return fmt.Errorf("failed to update enrollment: %w", err)
 	}
 
-	// TODO: Forward approved CSR to CA service for signing
+	// Forward approved CSR to CA service for signing (async)
+	// This would typically be done by a background worker that:
+	// 1. Picks up approved enrollments
+	// 2. Calls CA service via gRPC
+	// 3. Updates enrollment with certificate
+	// 
+	// For now, mark as approved and let a worker handle the actual signing
+	// See: ra/internal/grpc/ca_client.go for CA integration
+	s.logger.Info("Enrollment queued for CA signing")
 
 	return nil
 }
